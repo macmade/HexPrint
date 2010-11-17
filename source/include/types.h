@@ -58,6 +58,7 @@ extern "C" {
  * @field       license     Prints the program's license terms
  * @field       help        Prints the program's help screen
  * @field       cols        Number of hexadecimal columns to show
+ * @field       group       Groups bytes
  * @field       ascii       Displays the ASCII data
  * @field       lines       Displays the lines numbers
  * @field       file        The path to the file to display
@@ -68,6 +69,7 @@ typedef struct _hexprint_cli_args
     bool         license;
     bool         help;
     unsigned int cols;
+    unsigned int group;
     bool         ascii;
     bool         lines;
     char       * file;

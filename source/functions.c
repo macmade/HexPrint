@@ -47,7 +47,7 @@
  * @param       lines   Whether to display the line numbers or not
  * @result      void
  */
-void hexprint_display( FILE * fp, unsigned int cols, bool ascii, bool lines )
+void hexprint_display( FILE * fp, unsigned int cols, bool ascii, bool lines, unsigned int group )
 {
     char       * buffer;
     unsigned int length;
@@ -72,7 +72,7 @@ void hexprint_display( FILE * fp, unsigned int cols, bool ascii, bool lines )
         
         offset += cols;
         
-        hexprint_display_hex( buffer, length, cols );
+        hexprint_display_hex( buffer, length, cols, group );
         
         if( ascii == true )
         {
@@ -94,12 +94,17 @@ void hexprint_display( FILE * fp, unsigned int cols, bool ascii, bool lines )
  * @param       cols    The number of data columns to display
  * @result      void
  */
-void hexprint_display_hex( char * buffer, unsigned int length, unsigned int cols )
+void hexprint_display_hex( char * buffer, unsigned int length, unsigned int cols, unsigned int group )
 {
     unsigned int i;
     
     for( i = 0; i < cols; i++ )
     {
+        if( i % group == 0 && i != 0 )
+        {
+            printf( "  " );
+        }
+        
         if( i < length )
         {
             printf( "%02X", ( unsigned char )buffer[ i ] );
@@ -165,6 +170,7 @@ void hexprint_get_cli_args( int argc, char ** argv, hexprint_cli_args * args )
     args->version = false;
     args->help    = false;
     args->cols    = HEXPRINT_DEFAULT_COLS;
+    args->group   = HEXPRINT_DEFAULT_GROUP;
     args->ascii   = HEXPRINT_DEFAULT_ASCII;
     args->lines   = HEXPRINT_DEFAULT_LINES;
     args->file    = NULL;
@@ -187,7 +193,15 @@ void hexprint_get_cli_args( int argc, char ** argv, hexprint_cli_args * args )
                     args->cols = atoi( *( ++argv ) );
                 }
                 break;
-            
+                
+            case 'g':
+                
+                if( i < argc - 1 )
+                {
+                    args->group = atoi( *( ++argv ) );
+                }
+                break;
+                
             case '-':
                 
                 option = *( argv ) + 1;
@@ -201,6 +215,13 @@ void hexprint_get_cli_args( int argc, char ** argv, hexprint_cli_args * args )
                     if( i < argc - 1 )
                     {
                         args->cols = atoi( *( ++argv ) );
+                    }
+                }
+                if( strcmp( option, "group" ) == 0 )
+                {
+                    if( i < argc - 1 )
+                    {
+                        args->group = atoi( *( ++argv ) );
                     }
                 }
                 else if( strcmp( option, "no-lines" ) == 0 )
@@ -265,6 +286,9 @@ void hexprint_print_help( char * name )
         "    \n"
         "    -c [i] | --columns [i]\n"
         "    The number of columns to display for the hexadecimal code (integer value)\n"
+        "    \n"
+        "    -g [i] | --group [i]\n"
+        "    Groups bytes by the given number (integer value)\n"
         "    \n"
         "    -a | --no-ascii\n"
         "    Do not display the ASCII code\n"

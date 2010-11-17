@@ -45,6 +45,7 @@ extern "C" {
 
 #define HEXPRINT_VERSION        "0.0.1"
 #define HEXPRINT_DEFAULT_COLS   16
+#define HEXPRINT_DEFAULT_GROUP  4
 #define HEXPRINT_DEFAULT_LINES  true
 #define HEXPRINT_DEFAULT_ASCII  true
 

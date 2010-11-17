@@ -52,7 +52,7 @@ extern "C" {
  * @param       lines   Whether to display the line numbers or not
  * @result      void
  */
-void hexprint_display( FILE * fp, unsigned int cols, bool ascii, bool lines );
+void hexprint_display( FILE * fp, unsigned int cols, bool ascii, bool lines, unsigned int group );
 
 /*!
  * @function    hexprint_display_hex
@@ -62,7 +62,7 @@ void hexprint_display( FILE * fp, unsigned int cols, bool ascii, bool lines );
  * @param       cols    The number of data columns to display
  * @result      void
  */
-void hexprint_display_hex( char * buffer, unsigned int length, unsigned int cols );
+void hexprint_display_hex( char * buffer, unsigned int length, unsigned int cols, unsigned int group );
 
 /*!
  * @function    hexprint_display_ascii

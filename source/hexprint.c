@@ -92,7 +92,7 @@ int main( int argc, char * argv[] )
         return EXIT_FAILURE;
     }
     
-    hexprint_display( fp, args.cols, args.ascii, args.lines );
+    hexprint_display( fp, args.cols, args.ascii, args.lines, args.group );
     
     fclose( fp );
     

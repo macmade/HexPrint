@@ -1,6 +1,8 @@
 HexPrint
 ========
 
+[![Build Status](https://travis-ci.org/macmade/HexPrint.svg?branch=master)](https://travis-ci.org/macmade/HexPrint)
+
 About
 -----
 

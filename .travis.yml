@@ -1,3 +1,0 @@
-language: objective-c
-compiler: clang
-script: make && make test

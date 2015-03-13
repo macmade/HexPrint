@@ -32,42 +32,18 @@
  * @copyright       (c) 2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "C99.h"
-#include "Arguments.h"
 #include "Display.h"
 
-int main( int argc, char * argv[] )
+void DisplayPrintHelp( void )
 {
-    MutableArgumentsRef args;
-    int                 ret;
-    
-    args = ArgumentsCreate( argc, argv );
-    
-    if( ArgumentsValidate( args ) == false )
-    {
-        goto failure;
-    }
-    
-    if( ArgumentsGetShowHelp( args ) )
-    {
-        DisplayPrintHelp();
-        
-        goto success;
-    }
-    
-    success:
-    
-    ret = EXIT_SUCCESS;
-    
-    goto end;
-        
-    failure:
-        
-        ret = EXIT_FAILURE;
-        
-    end:
-        
-        ArgumentsDelete( args );        
-        
-        return ret;
+    printf
+    (
+        "Usage:\n"
+        "\n"
+        "    hexprint [options] <file>\n"
+        "\n"
+        "Options:\n"
+        "\n"
+        "    --help, -h     Prints this help message\n"
+    );
 }

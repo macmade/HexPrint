@@ -42,6 +42,7 @@ extern "C" {
 #include "C99.h"
 
 void DisplayPrintError( const char * format, ... );
+void DisplayPrintHelp( void );
 
 #ifdef __cplusplus
 }

@@ -37,8 +37,11 @@ include make/Targets.mk
 
 TOOL    := hexprint
 PROMPT  := HEXPRINT
-DEPS    := 
-FILES   := $(call MAKE_FUNC_C_FILES,$(DIR_SRC))
+LIBS    := ncurses
+FILES   := $(call MAKE_FUNC_C_FILES,$(DIR_SRC))             \
+           $(call MAKE_FUNC_C_FILES,$(DIR_SRC)Arguments/)   \
+           $(call MAKE_FUNC_C_FILES,$(DIR_SRC)Display/)     \
+           $(call MAKE_FUNC_C_FILES,$(DIR_SRC)IO/)
 
 all: build
 	

@@ -32,27 +32,15 @@
  * @copyright       (c) 2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#ifndef HEXPRINT_DISPLAY_H
-#define HEXPRINT_DISPLAY_H
+#include "Display.h"
+#include <sys/ioctl.h>
+#include <unistd.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+size_t DisplayGetAvailableRows( void )
+{
+    struct winsize  w;
+    
+    ioctl( STDOUT_FILENO, TIOCGWINSZ, &w );
 
-#include "C99.h"
-
-void DisplayStart( void );
-void DisplayStop( void );
-
-size_t DisplayGetAvailableColumns( void );
-size_t DisplayGetAvailableRows( void );
-
-void DisplayPrintError( const char * format, ... );
-void DisplayPrintHelp( void );
-void DisplayPrintFile( const char * file, FILE * fp, size_t line, size_t cols, size_t rows );
-
-#ifdef __cplusplus
+    return w.ws_row;
 }
-#endif
-
-#endif /* HEXPRINT_DISPLAY_H */

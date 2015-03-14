@@ -50,6 +50,7 @@ size_t DisplayGetAvailableRows( void );
 void DisplayPrintError( const char * format, ... );
 void DisplayPrintHelp( void );
 void DisplayPrintFile( const char * file, FILE * fp, size_t line, size_t cols, size_t rows );
+void DisplayPrintData( FILE * fp, size_t line, size_t cols, size_t rows );
 
 #ifdef __cplusplus
 }

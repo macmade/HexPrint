@@ -35,82 +35,78 @@
 #include "Display.h"
 #include <ncurses.h>
 
-void DisplayPrintFile( const char * file, FILE * fp, size_t line, size_t cols, size_t rows )
+void DisplayPrintData( FILE * fp, size_t line, size_t cols, size_t rows )
 {
-    size_t       i;
-    char       * hr;
-    char       * filename;
-    const char * filePart;
-    size_t       size;
+    size_t    n1;
+    size_t    n2;
+    size_t    i;
+    size_t    j;
+    size_t    c;
+    uint8_t * buf;
+    uint8_t   b;
     
-    clear();
-    
-    if( file == NULL || fp == NULL )
+    if( fp == NULL )
     {
         return;
     }
     
-    if( cols < 50 || rows < 8 )
+    if( cols < 50 || rows < 1 )
     {
         return;
     }
     
-    fseek( fp, 0, SEEK_END );
+    n1  = ( cols - 20 ) / 4;
+    n2  = n1 * rows;
+    buf = calloc( 1, n2 );
     
-    size = ( size_t )ftell( fp );
-    
-    fseek( fp, 0, SEEK_SET );
-    
-    hr       = calloc( 1, cols + 1 );
-    filename = calloc( 1, cols + 1 );
-    
-    if( hr == NULL || filename == NULL )
+    if( buf == NULL )
     {
-        goto end;
+        return;
     }
     
-    for( i = 0; i < cols - 1; i++ )
+    fseek( fp, ( long )( n1 * line ), SEEK_SET );
+    
+    c = fread( buf, 1, n2, fp );
+    
+    for( i = 0; i < rows; i++ )
     {
-        hr[ i ] = '-';
+        printw( "%015X: ", n1 * i );
+        
+        for( j = 0; j < n1; j++ )
+        {
+            if( ( n1 * i ) + j >= c )
+            {
+                printw( "   " );
+            }
+            else
+            {
+                b = buf[ ( n1 * i ) + j ];
+                
+                printw( "%02X ", b );
+            }
+        }
+        
+        printw( "| " );
+        
+        for( j = 0; j < n1; j++ )
+        {
+            if( ( n1 * i ) + j >= c )
+            {
+                break;
+            }
+            
+            b = buf[ ( n1 * i ) + j ];
+            
+            printw( "%c", ( isgraph( b ) ) ? b : '.' );
+        }
+        
+        printw( "\n" );
+        
+        if( ( i + 1 ) * n1 >= c )
+        {
+            break;
+        }
     }
     
-    #ifdef WIN32
-    filePart = strrchr( file, '\\' );
-    #else
-    filePart = strrchr( file, '/' );
-    #endif
-    
-    if( filePart == NULL )
-    {
-        filePart = file;
-    }
-    else
-    {
-        filePart++;
-    }
-    
-    strncpy( filename, filePart, cols - 7 );
-    
-    printw( "%s\n", hr );
-    printw( "File: <%s>\n", filename );
-    printw( "Size: %zu bytes\n", size );
-    printw( "%s\n", hr );
-    
-    if( size == 0 )
-    {
-        goto end;
-    }
-    
-    DisplayPrintData( fp, line, cols, rows - 7 );
-    
-    move( rows - 3, 0 );
-    printw( "%s\n", hr );
-    printw( "Press <q> to quit or navigate with the arrow keys:\n", hr );
-    
-    end:
-    
-    refresh();
-    
-    free( hr );
-    free( filename );
+    free( buf );
 }

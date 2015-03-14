@@ -43,6 +43,7 @@ extern "C" {
 
 bool    IOFileExists( const char * path );
 size_t  IOGetFileSize( const char * path );
+double  IOHumanFileSize( size_t bytes, const char ** unit );
 
 #ifdef __cplusplus
 }

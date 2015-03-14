@@ -29,105 +29,51 @@
 
 /*!
  * @author          Jean-David Gadina
- * @copyright       (c) 2015, Jean-David Gadina - www.xs-labs.com
+ * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "Display.h"
 #include "IO.h"
-#include <ncurses.h>
 
-void DisplayPrintFile( const char * file, FILE * fp, size_t line, size_t cols, size_t rows )
+static const char * __units[ 4 ] = { "B", "KB", "MB", "TB" };
+
+double IOHumanFileSize( size_t bytes, const char ** unit )
 {
-    size_t       i;
-    char       * hr;
-    char       * filename;
-    const char * filePart;
-    size_t       size;
+    double s;
     
-    clear();
+    s = ( double )bytes;
     
-    if( file == NULL || fp == NULL )
+    if( bytes >= 1024 * 1024 * 1024 )
     {
-        return;
-    }
-    
-    if( cols < 50 || rows < 8 )
-    {
-        return;
-    }
-    
-    fseek( fp, 0, SEEK_END );
-    
-    size = ( size_t )ftell( fp );
-    
-    fseek( fp, 0, SEEK_SET );
-    
-    hr       = calloc( 1, cols + 1 );
-    filename = calloc( 1, cols + 1 );
-    
-    if( hr == NULL || filename == NULL )
-    {
-        goto end;
-    }
-    
-    for( i = 0; i < cols - 1; i++ )
-    {
-        hr[ i ] = '-';
-    }
-    
-    #ifdef WIN32
-    filePart = strrchr( file, '\\' );
-    #else
-    filePart = strrchr( file, '/' );
-    #endif
-    
-    if( filePart == NULL )
-    {
-        filePart = file;
-    }
-    else
-    {
-        filePart++;
-    }
-    
-    strncpy( filename, filePart, cols - 7 );
-    
-    printw( "%s\n", hr );
-    printw( "File: <%s>\n", filename );
-    
-    if( size > 1024 )
-    {
+        if( unit != NULL )
         {
-            double       s;
-            const char * u;
-            
-            s = IOHumanFileSize( size, &u );
-            
-            printw( "Size: %.02f %s\n", s, u );
+            *( unit ) = __units[ 3 ];
         }
+        
+        return ( ( s / 1024 ) / 1024 ) / 1024;
     }
-    else
+    else if( bytes >= 1024 * 1024 )
     {
-        printw( "Size: %zu bytes\n", size );
+        if( unit != NULL )
+        {
+            *( unit ) = __units[ 2 ];
+        }
+        
+        return ( s / 1024 ) / 1024;
     }
-    
-    printw( "%s\n", hr );
-    
-    if( size == 0 )
+    else if( bytes >= 1024 )
     {
-        goto end;
+        if( unit != NULL )
+        {
+            *( unit ) = __units[ 1 ];
+        }
+        
+        return s / 1024;
     }
     
-    DisplayPrintData( fp, line, cols, rows - 7 );
+    if( unit != NULL )
+    {
+        *( unit ) = __units[ 0 ];
+    }
     
-    move( rows - 3, 0 );
-    printw( "%s\n", hr );
-    printw( "Press <q> to quit or navigate with the arrow keys:\n", hr );
-    
-    end:
-    
-    refresh();
-    
-    free( hr );
-    free( filename );
+    return s;
 }

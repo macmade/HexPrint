@@ -37,11 +37,80 @@
 
 void DisplayPrintFile( const char * file, FILE * fp, size_t line, size_t cols, size_t rows )
 {
-    ( void )file;
-    ( void )fp;
+    size_t       i;
+    char       * hr;
+    char       * filename;
+    const char * filePart;
+    size_t       size;
+    
+    clear();
+    
+    if( file == NULL || fp == NULL )
+    {
+        return;
+    }
+    
+    if( cols < 50 || rows < 10 )
+    {
+        return;
+    }
+    
+    fseek( fp, 0, SEEK_END );
+    
+    size = ( size_t )ftell( fp );
+    
+    fseek( fp, 0, SEEK_SET );
+    
+    hr       = calloc( cols + 1, 1 );
+    filename = calloc( cols + 1, 1 );
+    
+    if( hr == NULL || filename == NULL )
+    {
+        goto end;
+    }
+    
+    for( i = 0; i < cols - 1; i++ )
+    {
+        hr[ i ] = '-';
+    }
+    
+    #ifdef WIN32
+    filePart = strrchr( file, '\\' );
+    #else
+    filePart = strrchr( file, '/' );
+    #endif
+    
+    if( filePart == NULL )
+    {
+        filePart = file;
+    }
+    else
+    {
+        filePart++;
+    }
+    
+    strncpy( filename, filePart, cols - 7 );
+    
+    printw( "%s\n", hr );
+    printw( "File: <%s>\n", filename );
+    printw( "Size: %zu bytes\n", size );
+    printw( "%s\n", hr );
+    
+    if( size == 0 )
+    {
+        goto end;
+    }
+    
     ( void )line;
-    ( void )cols;
-    ( void )rows;
+    
+    move( rows - 3, 0 );
+    printw( "%s\n", hr );
+    printw( "Press <q> to quit or navigate with the arrow keys:\n", hr );
+    
+    end:
     
     refresh();
+    
+    free( hr );
+    free( filename );
 }

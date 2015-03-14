@@ -42,6 +42,8 @@ void DisplayPrintData( FILE * fp, size_t line, size_t cols, size_t rows )
     size_t    i;
     size_t    j;
     size_t    c;
+    size_t    end;
+    size_t    pos;
     uint8_t * buf;
     uint8_t   b;
     
@@ -64,13 +66,23 @@ void DisplayPrintData( FILE * fp, size_t line, size_t cols, size_t rows )
         return;
     }
     
-    fseek( fp, ( long )( n1 * line ), SEEK_SET );
+    fseek( fp, 0, SEEK_END );
+    
+    end = ( size_t )ftell( fp );
+    pos = n1 * line;
+    
+    fseek( fp, ( long )pos, SEEK_SET );
     
     c = fread( buf, 1, n2, fp );
     
     for( i = 0; i < rows; i++ )
     {
-        printw( "%015X: ", n1 * i );
+        if( c == 0 )
+        {
+            break;
+        }
+        
+        printw( "%015X: ", n1 * ( i + line ) );
         
         for( j = 0; j < n1; j++ )
         {

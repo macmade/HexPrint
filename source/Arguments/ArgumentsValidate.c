@@ -56,5 +56,12 @@ bool ArgumentsValidate( ArgumentsRef o )
         return false;
     }
     
+    if( IOFileExists( o->filePath ) == false )
+    {
+        DisplayPrintError( "File does not exist: %s", o->filePath );
+        
+        return false;
+    }
+    
     return true;
 }

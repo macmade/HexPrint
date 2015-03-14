@@ -35,12 +35,15 @@
 #include "C99.h"
 #include "Arguments.h"
 #include "Display.h"
+#include <ncurses.h>
 
 int main( int argc, char * argv[] )
 {
     MutableArgumentsRef args;
     int                 ret;
+    FILE              * fp;
     
+    fp   = NULL;
     args = ArgumentsCreate( argc, argv );
     
     if( ArgumentsValidate( args ) == false )
@@ -55,6 +58,66 @@ int main( int argc, char * argv[] )
         goto success;
     }
     
+    fp = fopen( ArgumentsGetFilePath( args ), "rb" );
+    
+    if( fp == NULL )
+    {
+        DisplayPrintError( "Cannot open file for reading: %s", ArgumentsGetFilePath( args ) );
+        
+        goto failure;
+    }
+    
+    DisplayStart();
+    
+    {
+        int    c;
+        size_t line;
+        size_t cols;
+        size_t rows;
+        
+        line = 0;
+        c    = 0;
+        
+        do
+        {
+            cols = DisplayGetAvailableColumns();
+            rows = DisplayGetAvailableRows();
+            
+            if( c == KEY_UP && line > 0 )
+            {
+                line--;
+            }
+            else if( c == KEY_DOWN || c == 10 )
+            {
+                line++;
+            }   
+            else if( c == KEY_PPAGE || c == 21 )
+            {
+                line = ( line < rows ) ? 0 : line - rows;
+            }
+            else if( c == KEY_NPAGE || c == 4 )
+            {
+                line += rows;
+            }
+            else if( c == 'q' )
+            {
+                break;
+            }
+            
+            DisplayPrintFile
+            (
+                ArgumentsGetFilePath( args ),
+                fp,
+                line,
+                cols,
+                rows
+            );
+        }
+        while( ( c = getch() ) );
+    }
+    
+    DisplayStop();
+    
     success:
     
     ret = EXIT_SUCCESS;
@@ -67,7 +130,12 @@ int main( int argc, char * argv[] )
         
     end:
         
-        ArgumentsDelete( args );        
+        if( fp != NULL )
+        {
+            fclose( fp );
+        }
+        
+        ArgumentsDelete( args );
         
         return ret;
 }

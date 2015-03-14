@@ -43,6 +43,5 @@ void DisplayPrintFile( const char * file, FILE * fp, size_t line, size_t cols, s
     ( void )cols;
     ( void )rows;
     
-    printw( "OK: %zu\n", line );
     refresh();
 }

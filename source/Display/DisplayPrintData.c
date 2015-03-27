@@ -35,7 +35,7 @@
 #include "Display.h"
 #include <ncurses.h>
 
-void DisplayPrintData( FILE * fp, size_t line, size_t cols, size_t rows )
+void DisplayPrintData( FILE * fp, size_t * line, size_t cols, size_t rows )
 {
     size_t    n1;
     size_t    n2;
@@ -69,7 +69,7 @@ void DisplayPrintData( FILE * fp, size_t line, size_t cols, size_t rows )
     fseek( fp, 0, SEEK_END );
     
     end = ( size_t )ftell( fp );
-    pos = n1 * line;
+    pos = n1 * *( line );
     
     fseek( fp, ( long )pos, SEEK_SET );
     
@@ -82,7 +82,7 @@ void DisplayPrintData( FILE * fp, size_t line, size_t cols, size_t rows )
             break;
         }
         
-        printw( "%015X: ", n1 * ( i + line ) );
+        printw( "%015X: ", n1 * ( i + *( line ) ) );
         
         for( j = 0; j < n1; j++ )
         {

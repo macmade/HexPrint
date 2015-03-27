@@ -36,7 +36,7 @@
 #include "IO.h"
 #include <ncurses.h>
 
-void DisplayPrintFile( const char * file, FILE * fp, size_t line, size_t cols, size_t rows )
+void DisplayPrintFile( const char * file, FILE * fp, size_t * line, size_t cols, size_t rows )
 {
     size_t       i;
     char       * hr;

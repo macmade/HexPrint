@@ -35,6 +35,7 @@
 #include "C99.h"
 #include "Arguments.h"
 #include "Display.h"
+#include "IO.h"
 #include <ncurses.h>
 
 int main( int argc, char * argv[] )
@@ -56,6 +57,13 @@ int main( int argc, char * argv[] )
         DisplayPrintHelp();
         
         goto success;
+    }
+    
+    if( IOGetFileSize( ArgumentsGetFilePath( args ) ) == 0 )
+    {
+        DisplayPrintError( "File is empty: %s", ArgumentsGetFilePath( args ) );
+        
+        goto failure;
     }
     
     fp = fopen( ArgumentsGetFilePath( args ), "rb" );
@@ -108,7 +116,7 @@ int main( int argc, char * argv[] )
             (
                 ArgumentsGetFilePath( args ),
                 fp,
-                line,
+                &line,
                 cols,
                 rows
             );

@@ -10,12 +10,35 @@ HexPrint
 About
 -----
 
-...
+HexPrint is a command line tool to display files content as hexadecimal.
+
+The command is interactive and fills the available terminal space with the hexadecimal dump, along with ASCII data.  
+Scrolling can be achieved with the arrow keys, `ctrl-d` or `ctrl-u`.
 
 Usage
 -----
 
-...
+    Usage: hexprint [options] <file>
+
+    Options:
+
+        --help, -h     Prints this help message
+
+Example
+-------
+
+    ---------------------------------------------------------------
+    File: <hexprint>
+    Size: 14.84 KB
+    ---------------------------------------------------------------
+    000000000000000: CF FA ED FE 07 00 00 01 03 00 00 | ...........
+    00000000000000B: 80 02 00 00 00 11 00 00 00 38 06 | .........8.
+    000000000000016: 00 00 85 00 20 00 00 00 00 00 19 | ...........
+    000000000000021: 00 00 00 48 00 00 00 5F 5F 50 41 | ...H...__PA
+    00000000000002C: 47 45 5A 45 52 4F 00 00 00 00 00 | GEZERO.....
+    000000000000037: 00 00 00 00 00 00 00 00 00 00 00 | ...........
+    ---------------------------------------------------------------
+    Press <q> to quit or navigate with the arrow keys:
 
 License
 -------

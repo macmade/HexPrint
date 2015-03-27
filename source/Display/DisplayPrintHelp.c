@@ -38,9 +38,7 @@ void DisplayPrintHelp( void )
 {
     printf
     (
-        "Usage:\n"
-        "\n"
-        "    hexprint [options] <file>\n"
+        "Usage: hexprint [options] <file>\n"
         "\n"
         "Options:\n"
         "\n"

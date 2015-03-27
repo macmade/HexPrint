@@ -43,6 +43,7 @@ void DisplayPrintData( FILE * fp, size_t * line, size_t cols, size_t rows )
     size_t    j;
     size_t    c;
     size_t    end;
+    size_t    last;
     size_t    pos;
     uint8_t * buf;
     uint8_t   b;
@@ -57,18 +58,33 @@ void DisplayPrintData( FILE * fp, size_t * line, size_t cols, size_t rows )
         return;
     }
     
-    n1  = ( cols - 20 ) / 4;
-    n2  = n1 * rows;
-    buf = calloc( 1, n2 );
+    fseek( fp, 0, SEEK_END );
+    
+    end  = ( size_t )ftell( fp );
+    n1   = ( cols - 20 ) / 4;
+    n2   = n1 * rows;
+    buf  = calloc( 1, n2 );
+    last = ( end / n1 );
     
     if( buf == NULL )
     {
         return;
     }
     
-    fseek( fp, 0, SEEK_END );
+    if( last >= rows - 1 )
+    {
+        last -= rows - 1;
     
-    end = ( size_t )ftell( fp );
+        if( *( line ) > last )
+        {
+            *( line ) = last;
+        }
+    }
+    else
+    {
+        *( line ) = 0;
+    }
+    
     pos = n1 * *( line );
     
     fseek( fp, ( long )pos, SEEK_SET );
